@@ -1,0 +1,15 @@
+"Item", "Date", "Price","Quanity", "Comment"
+Buzzer,14.08.23,5.83,50
+Wire,14.08.23,11.98,100
+CarChasis,15.08.23,154.34,100, maybe 2 chasis
+CarChasisKit,15.08.23,117.42,100
+CasterRollerWheel,15.08.23,55.99,64
+MicroServer,19.08.23,37.49,50
+Wire,30.08.23,18.61,100
+Potentiometer,23.08.23,27.50,15
+MotorDriver,23.08.23,25.60,15
+MiniScrewdriver,23.08.23,7.98,30
+Motor,23.08.23,32.60,32
+BatteryPack,23.08.23,9.85,15
+SmallDisplay,23.08.23,12.46,5
+
