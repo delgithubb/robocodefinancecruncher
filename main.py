@@ -14,5 +14,4 @@ with open('data.csv', 'a',newline ='') as f:
           counter -=1
      f.close()
 
-#add the two multiple items
-#delete file and ulpoad to drive
+
