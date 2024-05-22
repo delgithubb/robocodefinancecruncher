@@ -1,4 +1,4 @@
-"Item", "Date", "Price","Quanity", "Comment"
+Item,Date,Price,Quanity,Comment
 Buzzer,14.08.23,5.83,50
 Wire,14.08.23,11.98,100
 CarChasis,15.08.23,154.34,100, maybe 2 chasis
