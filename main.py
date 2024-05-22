@@ -9,7 +9,7 @@ with open('data.csv', 'a',newline ='') as f:
           item = input('Type item name: ')
           price = (input('Type Price: '))
           quantity = (input('Type Quantity: '))
-          fw.writerow((item,date, price, quantity))
+          f.writerow((item,date, price, quantity))
 
           counter -=1
      f.close()
