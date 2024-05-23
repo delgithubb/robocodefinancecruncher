@@ -4,7 +4,7 @@ import pandas as pd
 import csv
 
 datacsv = "./data.csv"
-data = dict()
+data = []
 
 
 app = Dash(__name__)
@@ -18,10 +18,14 @@ app.layout = html.Div([
 
 #fix this function so graph works
 def datexsalesy():
-    with open(datacsv) as f:
-        reader=csv.reader(f)
-        for row in reader:
-            csv.writer(data).writerow(row['Date'], row['Sales'])
+    df=pd.read_csv('./data.csv')
+    df = df.to_dict()
+
+    for row in df:
+        print(row)
+        data.append([row['Item'],row['Date']])
+
+
         
 
 @app.callback(
@@ -33,7 +37,7 @@ def display_graph(n_clicks):
 
     x = 'Sales'
     y = 'Date'
-    fig = px.line(data, x=x, y=y)    
+    fig = px.line(df, x=x, y=y)
     return fig
 
 
