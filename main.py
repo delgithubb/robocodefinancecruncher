@@ -3,9 +3,11 @@ import plotly.express as px
 import pandas as pd
 import csv
 
-datacsv = "./data.csv"
 data = []
-
+ax = ''
+ay = ''
+data = pd.read_csv('data.csv')
+data = data.to_dict(orient='records')
 
 app = Dash(__name__)
 
@@ -16,28 +18,36 @@ app.layout = html.Div([
     dcc.Graph(id="graph"),
 ])
 
-#fix this function so graph works
-def datexsalesy():
-    df=pd.read_csv('./data.csv')
-    df = df.to_dict()
+def noofsalesoverdate(ax,ay):
+     ax = 'Date'
+     ay = 'NoOfSales'
+     dates=set([row['Date'] for row in data])
+     header=[ay,ax]
+     with open('datachange.csv', 'w') as output_file:
+          csv.writer(output_file).writerow(header)
+          for date in dates: 
+               sub_list=[]
+               for row in data:
+                    if row['Date']==date:
+                         sub_list.append(row)
+               newrow = [str(len(sub_list)),date]
+               csv.writer(output_file).writerow(newrow)
+     return ax, ay
+    
 
-    for row in df:
-        print(row)
-        data.append([row['Item'],row['Date']])
+
 
 
         
 
 @app.callback(
-    Output("graph", "figure"), 
-    Input("button", "n_clicks"))
-def display_graph(n_clicks):
-    datexsalesy()
-    df = pd.read_csv('./data.csv') # replace with your own data source
-
-    x = 'Sales'
-    y = 'Date'
-    fig = px.line(df, x=x, y=y)
+    Output('graph', 'figure'),
+    Input('button', 'value'))
+def display_graph():
+    datandaxis = noofsalesoverdate(ax,ay)
+    df = pd.read_csv('./datachange.csv')
+    fig = px.line(df, x=datandaxis[0], y=
+                  datandaxis[1])
     return fig
 
 
