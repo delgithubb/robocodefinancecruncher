@@ -8,7 +8,7 @@ data = []
 ax = ''
 ay = ''
 data = pd.read_csv('data.csv')
-print(data)
+
 data = data.to_dict(orient='records')
 
 app = Dash(__name__)
@@ -27,7 +27,7 @@ app.layout = html.Div([
         {
             'label':html.Div(['NoOfSales Over Date'], style={'color': 'Black', 'font-size': 15, 'display' : 'inline-block', 'font-family' : 'Arial','width' : '15%', 'margin': 'none', 'padding' : '10px' }),
             "value": "noofbuysoverdate"
-        }],  id='radio-button-picker')])
+        }],value='itemovertotalspending',  id='radio-button-picker')])
 
 def noofsalesoverdate():
     ax = 'Date'
@@ -36,8 +36,8 @@ def noofsalesoverdate():
     header=(ax,ay)
     #subject to change based on the two values, currently date has to be x so we cannot just switch them over to fix .to_datetime() method
     newdata = {
-        ay: [0],
-        ax: ['14.08.23']
+        ay: [],
+        ax: []
     }
     df = pandas.DataFrame(newdata)
     for date in dates:
@@ -47,8 +47,9 @@ def noofsalesoverdate():
                 sub_list.append(row)
         newrow = [str(len(sub_list)),date]
         df.loc[len(df)] = newrow
-    df['Date'] = pd.to_datetime(df['Date'])
-    df = df.sort_values('Date', ascending=True)
+
+    df = pd.to_datetime(df['Date'])
+    print(df)
     return ax, ay,df
 
 def itemoverquantity():
@@ -62,7 +63,7 @@ def itemoverquantity():
     df = pandas.DataFrame(newdata)
     for row in data:
          newrow=row[ax],row[ay]
-         df.loc[len(df)+1] = newrow
+         df.loc[len(df)] = newrow
     df = df.sort_values('Quantity', ascending=False)
     return ax, ay,df
 
@@ -80,14 +81,10 @@ def itemovertotalprice():
     for name in names:
         sub_value=0
         for row in data:
-            if row['Item']==name:
-                if row['Comment'] == 'Multiorder':
-                    pass
-                else:
-                    sub_value = sub_value+row['Price']
-            
-    newrow = [name,(sub_value*row['Quantity'])]
-    df.loc[len(df)] = newrow
+            if row['Item']==name and row['Comment']!= 'Multiorder':
+                sub_value = sub_value+row['Price']
+        
+        df.loc[len(df)] = name,sub_value
     return ax, ay,df
 
 
@@ -101,13 +98,24 @@ def display_graph(value):
                 datandaxis[1], width=2400, height=1000)
     elif value=='noofbuysoverdate':
         datandaxis = noofsalesoverdate()
-        fig = px.line(datandaxis[2], x=datandaxis[0], y=
-                datandaxis[1],  width=2400, height=1000)
+        fig = px.line(datandaxis[2], x=datandaxis[1], y=
+                datandaxis[0],  width=2400, height=1000)
         
     elif value=='itemovertotalspending':
         datandaxis = itemovertotalprice()
         fig = px.bar(datandaxis[2], x=datandaxis[0], y=
                 datandaxis[1],  width=2400, height=1000)
+    
+    fig.update_layout(
+        font_family="Arial",
+        font_color="Black",
+        font_size=15,
+        title_font_family="Arial",
+        title_font_color="black",
+        title_font_size=30
+    )
+
     return fig
 
-app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
