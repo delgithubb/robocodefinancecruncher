@@ -8,12 +8,12 @@ data = []
 ax = ''
 ay = ''
 data = pd.read_csv('data.csv')
+print(data)
 data = data.to_dict(orient='records')
 
 app = Dash(__name__)
 
 app.layout = html.Div([
-    html.Label('RoboCode Component Spending', style={'color':'Black', 'font-size':25,'centre':True, 'font-family' : 'Arial' , 'align':"center"  } ),
     dcc.Graph(id="graph"),
     dcc.RadioItems([
                 {
@@ -65,24 +65,25 @@ def itemoverquantity():
          df.loc[len(df)+1] = newrow
     df = df.sort_values('Quantity', ascending=False)
     return ax, ay,df
+print(ax)
 
 def itemovertotalprice():
-    ax = 'Name'
+    ax = 'Item'
     ay = 'Total Spending'
-    names=set([row['Name'] for row in data])
+    names=set([row['Item'] for row in data])
     header=(ax,ay)
     #subject to change based on the two values, currently date has to be x so we cannot just switch them over to fix .to_datetime() method
     newdata = {
-        ay: [],
-        ax: []
+        ax: [],
+        ay: []
     }
     df = pandas.DataFrame(newdata)
     for name in names:
         sub_value=0
         for row in data:
-            if row['Name']==name:
-                sub_list = sub_list+row['Price']
-        newrow = [name,sub_value]
+            if row['Item']==name and row['Comment'] != 'Multiorder':
+                sub_value = sub_value+row['Price']
+        newrow = [name,sub_value*row['Quantity']]
         df.loc[len(df)] = newrow
     return ax, ay,df
 
@@ -102,8 +103,8 @@ def display_graph(value):
         
     elif value=='itemovertotalspending':
         datandaxis = itemovertotalprice()
-        fig = px.line(datandaxis[2], x=datandaxis[0], y=
+        fig = px.bar(datandaxis[2], x=datandaxis[0], y=
                 datandaxis[1],  width=2400, height=1000)
-    
+    return fig
 
-app.run_server()
+app.run_server(debug=True)
