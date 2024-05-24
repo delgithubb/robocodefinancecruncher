@@ -65,7 +65,6 @@ def itemoverquantity():
          df.loc[len(df)+1] = newrow
     df = df.sort_values('Quantity', ascending=False)
     return ax, ay,df
-print(ax)
 
 def itemovertotalprice():
     ax = 'Item'
@@ -81,10 +80,14 @@ def itemovertotalprice():
     for name in names:
         sub_value=0
         for row in data:
-            if row['Item']==name and row['Comment'] != 'Multiorder':
-                sub_value = sub_value+row['Price']
-        newrow = [name,sub_value*row['Quantity']]
-        df.loc[len(df)] = newrow
+            if row['Item']==name:
+                if row['Comment'] == 'Multiorder':
+                    pass
+                else:
+                    sub_value = sub_value+row['Price']
+            
+    newrow = [name,(sub_value*row['Quantity'])]
+    df.loc[len(df)] = newrow
     return ax, ay,df
 
 
