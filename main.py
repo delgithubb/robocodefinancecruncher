@@ -3,7 +3,7 @@ from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 import pandas as pd
 import csv
-
+from datetime import datetime
 data = []
 ax = ''
 ay = ''
@@ -30,14 +30,16 @@ app.layout = html.Div([
         }],value='itemovertotalspending',  id='radio-button-picker')])
 
 def noofsalesoverdate():
-    ax = 'Date'
-    ay = 'NoOfItemsBought'
+    ax = 'NoOfItemsBought'
+    ay = 'Date'
     dates=list([row['Date'] for row in data])
+    dates.sort(key=lambda date: datetime.strptime(date, "%d.%m.%y"))
+
     header=(ax,ay)
     #subject to change based on the two values, currently date has to be x so we cannot just switch them over to fix .to_datetime() method
     newdata = {
-        ay: [],
-        ax: []
+        ax: [],
+        ay: []
     }
     df = pandas.DataFrame(newdata)
     for date in dates:
@@ -46,9 +48,8 @@ def noofsalesoverdate():
             if row['Date']==date:
                 sub_list.append(row)
         newrow = [str(len(sub_list)),date]
-        df.loc[len(df)] = newrow
+        df.loc[len(df)] = (newrow)
 
-    df = pd.to_datetime(df['Date'])
     print(df)
     return ax, ay,df
 
@@ -71,7 +72,6 @@ def itemovertotalprice():
     ax = 'Item'
     ay = 'Total Spending'
     names=set([row['Item'] for row in data])
-    header=(ax,ay)
     #subject to change based on the two values, currently date has to be x so we cannot just switch them over to fix .to_datetime() method
     newdata = {
         ax: [],
@@ -96,15 +96,17 @@ def display_graph(value):
         datandaxis = itemoverquantity()
         fig = px.bar(datandaxis[2], x=datandaxis[0], y=
                 datandaxis[1], width=2400, height=1000)
-    elif value=='noofsalesoverdate ':
-        datandaxis = noofsalesoverdate()
-        fig = px.line(datandaxis[2], x=datandaxis[1], y=
-                datandaxis[0],  width=2400, height=1000)
         
     elif value=='itemovertotalspending':
         datandaxis = itemovertotalprice()
         fig = px.bar(datandaxis[2], x=datandaxis[0], y=
                 datandaxis[1],  width=2400, height=1000)
+        
+    elif value=='noofsalesoverdate':
+        datandaxis = noofsalesoverdate()
+        fig = px.line(datandaxis[2], x=datandaxis[1], y=
+                datandaxis[0],  width=2400, height=1000)
+        print(fig)
     
     fig.update_layout(
         font_family="Arial",

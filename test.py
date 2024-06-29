@@ -2,24 +2,15 @@
 
 import pandas as pd
 import csv
+from datetime import datetime
 
 new_data=[]
 
 data = pd.read_csv('data.csv')
 data = data.to_dict(orient='records')
-dates=set([row['Date'] for row in data])
-new_list=[]
-header=['NoOfSales','Date']
-with open('noofsalesoverdate.csv', 'w') as output_file:
-    csv.writer(output_file).writerow(header)
-    for date in dates: 
-        sub_list=[]
-        for row in data:
-            if row['Date']==date:
-                sub_list.append(row)
-        newrow = [str(len(sub_list)),date]
-        csv.writer(output_file).writerow(newrow)
-        
+dates=list([row['Date'] for row in data])
+dates.sort(key=lambda date: datetime.strptime(date, "%d.%m.%y"))
+print(dates)
     
 
 
