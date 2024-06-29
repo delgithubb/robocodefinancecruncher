@@ -26,13 +26,13 @@ app.layout = html.Div([
         },
         {
             'label':html.Div(['NoOfSales Over Date'], style={'color': 'Black', 'font-size': 15, 'display' : 'inline-block', 'font-family' : 'Arial','width' : '15%', 'margin': 'none', 'padding' : '10px' }),
-            "value": "noofbuysoverdate"
+            "value": "noofsalesoverdate"
         }],value='itemovertotalspending',  id='radio-button-picker')])
 
 def noofsalesoverdate():
     ax = 'Date'
     ay = 'NoOfItemsBought'
-    dates=set([row['Date'] for row in data])
+    dates=list([row['Date'] for row in data])
     header=(ax,ay)
     #subject to change based on the two values, currently date has to be x so we cannot just switch them over to fix .to_datetime() method
     newdata = {
@@ -96,7 +96,7 @@ def display_graph(value):
         datandaxis = itemoverquantity()
         fig = px.bar(datandaxis[2], x=datandaxis[0], y=
                 datandaxis[1], width=2400, height=1000)
-    elif value=='noofbuysoverdate':
+    elif value=='noofsalesoverdate ':
         datandaxis = noofsalesoverdate()
         fig = px.line(datandaxis[2], x=datandaxis[1], y=
                 datandaxis[0],  width=2400, height=1000)
